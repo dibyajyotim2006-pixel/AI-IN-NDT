@@ -41,6 +41,7 @@ def run_streamlit_worker(port: int):
         _config._main_script_path = os.path.abspath(app_path)
         
         flag_options = {
+            "global.developmentMode": False,
             "server.port": port,
             "server.headless": True,
             "server.address": "127.0.0.1",
@@ -50,6 +51,7 @@ def run_streamlit_worker(port: int):
         bootstrap.load_config_options(flag_options=flag_options)
         
         cli_args = [
+            "--global.developmentMode=false",
             f"--server.port={port}",
             "--server.headless=true",
             "--server.address=127.0.0.1",

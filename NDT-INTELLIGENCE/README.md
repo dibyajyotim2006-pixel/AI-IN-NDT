@@ -4,6 +4,21 @@
 
 ---
 
+## 🖥️ Standalone Windows 11 Desktop Application
+
+**NDT Intelligence** is packaged as a standalone Windows 11 desktop application (`onedir` + PyWebView Edge Chromium):
+- **Zero Python Requirement:** Target PCs do not require Python, pip, or a terminal.
+- **Offline & Local:** Runs 100% offline with zero outbound network calls.
+- **Single-Instance Protection:** Prevents duplicate app instances via a Windows Named Mutex.
+- **Dynamic Port Allocation:** Binds dynamically to free local ports on `127.0.0.1`, avoiding port collisions.
+- **Persistent Storage:** SQLite assessment history, logs, and exports are stored safely in `%LOCALAPPDATA%\NDT Intelligence\`.
+
+### Running the Desktop Application:
+1. Extract `dist\NDT_Intelligence_v1.0.0_win64.zip`.
+2. Double-click `NDT Intelligence.exe`.
+
+---
+
 ## 🏗️ 1. Project Overview & Methodology
 
 Destructive testing of concrete cores is time-consuming, expensive, and structurally invasive. **NDT Intelligence** eliminates the requirement for destructive core extraction for every new test location by combining two complementary non-destructive methods (the **SonReb method**):
