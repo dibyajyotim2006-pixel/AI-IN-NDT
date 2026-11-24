@@ -12,9 +12,14 @@ ENV/
 
 # Build & PyInstaller
 build/
-dist/
 *.manifest
 *.spec.bak
+
+# Dist: Include the standalone application folder, exclude large raw zips
+!dist/
+!dist/NDT Intelligence/
+!dist/NDT Intelligence/**
+dist/*.zip
 
 # Pytest & Coverage
 .pytest_cache/
