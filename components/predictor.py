@@ -182,53 +182,40 @@ def render_predictor():
         st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
 
         # 1. Prediction Hero Section
-        st.markdown("""
-        <div style="background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border-radius: 12px; border: 2px solid #38BDF8; padding: 25px 30px; margin-bottom: 25px; box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.2);">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 12px; margin-bottom: 18px;">
-                <div>
-                    <span style="font-size: 0.85rem; letter-spacing: 1.5px; color: #38BDF8; font-weight: 700; text-transform: uppercase;">AI PREDICTION RESULT</span>
-                    <h2 style="margin: 4px 0 0 0; color: #FFFFFF; font-size: 1.8rem; font-weight: 700;">SAMPLE: {sample_id}</h2>
-                </div>
-                <div style="text-align: right;">
-                    <span style="background-color: #064E3B; color: #34D399; font-size: 0.85rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; border: 1px solid #059669;">
-                        ● Status: {status}
-                    </span>
-                </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; align-items: center;">
-                <div style="background-color: rgba(15, 23, 42, 0.7); border-radius: 10px; border: 1px solid #1E3A8A; padding: 20px; text-align: center;">
-                    <div style="font-size: 0.9rem; color: #94A3B8; font-weight: 600; margin-bottom: 6px;">PREDICTED COMPRESSIVE STRENGTH</div>
-                    <div style="font-size: 3.2rem; font-weight: 800; color: #38BDF8; line-height: 1.1;">
-                        {strength:.2f} <span style="font-size: 1.5rem; color: #93C5FD; font-weight: 600;">MPa</span>
-                    </div>
-                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 8px;">6-6-1 Sigmoid Artificial Neural Network</div>
-                </div>
-                
-                <div style="background-color: rgba(15, 23, 42, 0.7); border-radius: 10px; border: 1px solid #334155; padding: 20px;">
-                    <div style="font-size: 0.85rem; color: #94A3B8; font-weight: 600; margin-bottom: 6px;">INDICATIVE ASSESSMENT</div>
-                    <div style="font-size: 1.3rem; font-weight: 700; color: {badge_color}; margin-bottom: 8px;">
-                        {assessment}
-                    </div>
-                    <div style="font-size: 0.9rem; color: #E2E8F0; line-height: 1.4;">
-                        <strong>Pulse Velocity:</strong> {upv:.0f} m/s ({upv_grade})<br/>
-                        <strong>Rebound Index:</strong> {rebound:.1f}<br/>
-                        <strong>Concrete Maturity:</strong> {age:.1f} Days Curing
-                    </div>
-                </div>
-            </div>
-        </div>
-        """.format(
-            sample_id=pred_result["sample_id"],
-            status=pred_result["status"],
-            strength=pred_result["predicted_strength"],
-            badge_color=pred_result["upv_color"],
-            assessment=pred_result["assessment"],
-            upv=pred_result["upv"],
-            upv_grade=pred_result["upv_grade"],
-            rebound=pred_result["rebound_index"],
-            age=pred_result["age"]
-        ), unsafe_allow_html=True)
+        hero_html = f"""<div style="background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border-radius: 12px; border: 2px solid #38BDF8; padding: 25px 30px; margin-bottom: 25px; box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.2);">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 12px; margin-bottom: 18px;">
+<div>
+<span style="font-size: 0.85rem; letter-spacing: 1.5px; color: #38BDF8; font-weight: 700; text-transform: uppercase;">AI PREDICTION RESULT</span>
+<h2 style="margin: 4px 0 0 0; color: #FFFFFF; font-size: 1.8rem; font-weight: 700;">SAMPLE: {pred_result['sample_id']}</h2>
+</div>
+<div style="text-align: right;">
+<span style="background-color: #064E3B; color: #34D399; font-size: 0.85rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; border: 1px solid #059669;">
+● Status: {pred_result['status']}
+</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; align-items: center;">
+<div style="background-color: rgba(15, 23, 42, 0.7); border-radius: 10px; border: 1px solid #1E3A8A; padding: 20px; text-align: center;">
+<div style="font-size: 0.9rem; color: #94A3B8; font-weight: 600; margin-bottom: 6px;">PREDICTED COMPRESSIVE STRENGTH</div>
+<div style="font-size: 3.2rem; font-weight: 800; color: #38BDF8; line-height: 1.1;">
+{pred_result['predicted_strength']:.2f} <span style="font-size: 1.5rem; color: #93C5FD; font-weight: 600;">MPa</span>
+</div>
+<div style="font-size: 0.85rem; color: #64748B; margin-top: 8px;">6-6-1 Sigmoid Artificial Neural Network</div>
+</div>
+<div style="background-color: rgba(15, 23, 42, 0.7); border-radius: 10px; border: 1px solid #334155; padding: 20px;">
+<div style="font-size: 0.85rem; color: #94A3B8; font-weight: 600; margin-bottom: 6px;">INDICATIVE ASSESSMENT</div>
+<div style="font-size: 1.3rem; font-weight: 700; color: {pred_result['upv_color']}; margin-bottom: 8px;">
+{pred_result['assessment']}
+</div>
+<div style="font-size: 0.9rem; color: #E2E8F0; line-height: 1.4;">
+<strong>Pulse Velocity:</strong> {pred_result['upv']:.0f} m/s ({pred_result['upv_grade']})<br/>
+<strong>Rebound Index:</strong> {pred_result['rebound_index']:.1f}<br/>
+<strong>Concrete Maturity:</strong> {pred_result['age']:.1f} Days Curing
+</div>
+</div>
+</div>
+</div>"""
+        st.markdown(hero_html, unsafe_allow_html=True)
 
         # 2. Feature Engineering Technical Breakdown
         with st.expander("🔬 View Engineered ANN Features (6 Inputs Breakdown)", expanded=True):

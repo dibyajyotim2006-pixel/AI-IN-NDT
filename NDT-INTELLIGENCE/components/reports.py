@@ -118,64 +118,33 @@ def render_reports():
         upv_grade = pred["upv_grade"]
         strength_class = pred["strength_class"]
 
-    # Preview Card
-    st.markdown("""
-    <div style="background-color: #0F172A; border-radius: 10px; border: 1.5px solid #0284C7; padding: 22px 25px; margin-bottom: 25px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1E293B; padding-bottom: 10px; margin-bottom: 15px;">
-            <div style="font-size: 1.2rem; font-weight: 700; color: #FFFFFF;">
-                📄 Live Assessment Report Summary Preview
-            </div>
-            <div style="font-size: 0.8rem; background-color: #0369A1; color: white; padding: 4px 10px; border-radius: 4px; font-weight: 600;">
-                READY FOR EXPORT
-            </div>
+    # Live Assessment Report Summary Preview
+    st.markdown("""<div style="background-color: #1E293B; border-radius: 8px; border: 1px solid #334155; padding: 12px 18px; margin-top: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF;">📄 Live Assessment Report Summary Preview</span>
+        <span style="font-size: 0.75rem; background-color: #0284C7; color: white; padding: 4px 10px; border-radius: 4px; font-weight: 600;">READY FOR EXPORT</span>
+    </div>""", unsafe_allow_html=True)
+
+    prev_c1, prev_c2, prev_c3, prev_c4 = st.columns(4)
+    with prev_c1:
+        st.markdown(f"""<div class="metric-card"><div class="metric-label">SAMPLE ID</div><div class="metric-value" style="color: #38BDF8; font-size: 1.4rem;">{sample_id}</div><div class="metric-sub">Specimen Code</div></div>""", unsafe_allow_html=True)
+    with prev_c2:
+        st.markdown(f"""<div class="metric-card"><div class="metric-label">CURING MATURITY</div><div class="metric-value" style="font-size: 1.4rem;">{age:.1f} <span style="font-size: 0.9rem; color: #94A3B8;">Days</span></div><div class="metric-sub">Standard Curing</div></div>""", unsafe_allow_html=True)
+    with prev_c3:
+        st.markdown(f"""<div class="metric-card"><div class="metric-label">REBOUND HAMMER</div><div class="metric-value" style="font-size: 1.4rem;">{rebound:.1f}</div><div class="metric-sub">Index (R)</div></div>""", unsafe_allow_html=True)
+    with prev_c4:
+        st.markdown(f"""<div class="metric-card"><div class="metric-label">PULSE VELOCITY</div><div class="metric-value" style="font-size: 1.4rem;">{upv:.0f} <span style="font-size: 0.9rem; color: #94A3B8;">m/s</span></div><div class="metric-sub">UPV Transit</div></div>""", unsafe_allow_html=True)
+
+    st.markdown(f"""<div style="background-color: #0F172A; border-radius: 8px; border: 1.5px solid #0284C7; padding: 18px 22px; margin-top: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <div style="color: #94A3B8; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;">AI PREDICTED COMPRESSIVE STRENGTH</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #38BDF8; line-height: 1.1;">{predicted_strength:.2f} <span style="font-size: 1.2rem; color: #93C5FD;">MPa</span></div>
         </div>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
-            <div>
-                <span style="color: #64748B; font-size: 0.85rem;">SAMPLE IDENTIFIER</span><br/>
-                <strong style="color: #38BDF8; font-size: 1.1rem;">{sample_id}</strong>
-            </div>
-            <div>
-                <span style="color: #64748B; font-size: 0.85rem;">CURING MATURITY</span><br/>
-                <strong style="color: #E2E8F0; font-size: 1.1rem;">{age:.1f} Days</strong>
-            </div>
-            <div>
-                <span style="color: #64748B; font-size: 0.85rem;">REBOUND HAMMER (R)</span><br/>
-                <strong style="color: #E2E8F0; font-size: 1.1rem;">{rebound:.1f}</strong>
-            </div>
-            <div>
-                <span style="color: #64748B; font-size: 0.85rem;">PULSE VELOCITY</span><br/>
-                <strong style="color: #E2E8F0; font-size: 1.1rem;">{upv:.0f} m/s</strong>
-            </div>
+        <div style="text-align: right;">
+            <div style="color: #94A3B8; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;">QUALITY CLASSIFICATION</div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: #10B981;">{upv_grade}</div>
+            <div style="font-size: 0.85rem; color: #94A3B8;">{strength_class}</div>
         </div>
-        
-        <div style="background-color: #1E293B; border-radius: 8px; padding: 15px; border-left: 4px solid #38BDF8;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <span style="color: #94A3B8; font-size: 0.85rem; font-weight: 600;">AI PREDICTED STRENGTH</span>
-                    <div style="font-size: 2rem; font-weight: 800; color: #38BDF8;">
-                        {strength:.2f} MPa
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <span style="color: #94A3B8; font-size: 0.85rem; font-weight: 600;">QUALITY GRADE</span>
-                    <div style="font-size: 1.2rem; font-weight: 700; color: #10B981;">
-                        {upv_grade}
-                    </div>
-                    <div style="font-size: 0.85rem; color: #94A3B8;">{strength_class}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    """.format(
-        sample_id=sample_id,
-        age=age,
-        rebound=rebound,
-        upv=upv,
-        strength=predicted_strength,
-        upv_grade=upv_grade,
-        strength_class=strength_class
-    ), unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
     # Generate PDF
     pdf_bytes = generate_pdf_report(
