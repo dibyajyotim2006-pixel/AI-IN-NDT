@@ -2,8 +2,9 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
+from paths import get_model_path
 
-MODEL_FILE = os.path.join(os.path.dirname(__file__), "trained_model.pkl")
+MODEL_FILE = get_model_path()
 
 _model_bundle = None
 

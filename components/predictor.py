@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from model.predictor import predict_concrete_strength, validate_inputs
 from utils.storage import save_assessment, get_all_assessments
 from utils.pdf_generator import generate_pdf_report
+from paths import get_dataset_path
 
 def render_predictor():
     st.markdown("""
@@ -244,7 +245,7 @@ def render_predictor():
         """.format(sample_id=pred_result["sample_id"]), unsafe_allow_html=True)
 
         try:
-            df_samples = pd.read_csv("data/concrete_samples.csv")
+            df_samples = pd.read_csv(get_dataset_path())
             
             comp_fig = go.Figure()
             # Historical samples scatter

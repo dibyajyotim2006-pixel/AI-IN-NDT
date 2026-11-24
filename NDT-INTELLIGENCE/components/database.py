@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
+from paths import get_dataset_path, get_evaluated_dataset_path
 
 def render_database():
     st.markdown("""
@@ -16,8 +17,8 @@ def render_database():
     """, unsafe_allow_html=True)
 
     # Load evaluated or base samples
-    evaluated_path = "data/concrete_samples_evaluated.csv"
-    base_path = "data/concrete_samples.csv"
+    evaluated_path = get_evaluated_dataset_path()
+    base_path = get_dataset_path()
     
     if os.path.exists(evaluated_path):
         df = pd.read_csv(evaluated_path)

@@ -4,6 +4,7 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from model.predictor import get_model_bundle
+from paths import get_dataset_path, get_evaluated_dataset_path
 
 def render_analytics():
     st.markdown("""
@@ -19,9 +20,9 @@ def render_analytics():
 
     # Load evaluated concrete samples
     try:
-        df = pd.read_csv("data/concrete_samples_evaluated.csv")
+        df = pd.read_csv(get_evaluated_dataset_path())
     except Exception:
-        df = pd.read_csv("data/concrete_samples.csv")
+        df = pd.read_csv(get_dataset_path())
 
     # Load model bundle metrics
     try:

@@ -12,7 +12,7 @@ def render_reports():
             PDF Assessment Report Generator
         </h1>
         <p style="margin: 5px 0 0 0; color: #94A3B8; font-size: 1rem;">
-            Generate formal, certified civil engineering Non-Destructive Testing assessment reports
+            Generate formal, standardized civil engineering Non-Destructive Testing assessment reports
         </p>
     </div>
     """, unsafe_allow_html=True)

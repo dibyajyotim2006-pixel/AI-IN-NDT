@@ -124,7 +124,7 @@ def generate_pdf_report(
         ],
         [
             Paragraph("AI-Powered Concrete Compressive Strength Assessment System | Civil Engineering NDT Division", subtitle_style),
-            Paragraph("CONFIDENTIAL & CERTIFIED", ParagraphStyle('RightSub', parent=subtitle_style, alignment=2, textColor=colors.HexColor("#38BDF8")))
+            Paragraph("CONFIDENTIAL & TEST RECORD", ParagraphStyle('RightSub', parent=subtitle_style, alignment=2, textColor=colors.HexColor("#38BDF8")))
         ]
     ]
     banner_table = Table(banner_data, colWidths=[380, 160])
@@ -279,7 +279,7 @@ def generate_pdf_report(
     story.append(Spacer(1, 14))
 
     # 6. Engineer Notes & Verification Block
-    story.append(Paragraph("5. ENGINEERING REMARKS & CERTIFICATION", h2_style))
+    story.append(Paragraph("5. ENGINEERING REMARKS & TECHNICAL EVALUATION", h2_style))
     notes_para = Paragraph(f"<b>Remarks:</b> {notes}", body_style)
     story.append(notes_para)
     story.append(Spacer(1, 12))
@@ -287,7 +287,7 @@ def generate_pdf_report(
     sign_data = [
         [
             Paragraph("<b>TEST CONDUCTED BY:</b><br/><br/><br/>___________________________<br/>NDT Field Specialist", body_style),
-            Paragraph("<b>VERIFIED & APPROVED BY:</b><br/><br/><br/>___________________________<br/>Chartered Structural Engineer", body_style),
+            Paragraph("<b>INSPECTED & REVIEWED BY:</b><br/><br/><br/>___________________________<br/>Lead NDT QA/QC Engineer", body_style),
             Paragraph(f"<b>OFFICIAL STAMP / SEAL:</b><br/><br/>Date: {datetime.datetime.now().strftime('%d/%m/%Y')}<br/>Status: <b>VERIFIED</b>", body_style)
         ]
     ]
@@ -304,7 +304,7 @@ def generate_pdf_report(
 
     # Footer Disclaimer
     disclaimer = Paragraph(
-        "<font size=7 color='#94A3B8'>Notice: This prediction is generated autonomously by the NDT Intelligence Neural Network System based on non-destructive surface hardness and ultrasonic wave velocity. For legal structural certification, periodic core extraction calibration is recommended as per local building codes.</font>",
+        "<font size=7 color='#94A3B8'>Notice: This prediction is generated autonomously by the NDT Intelligence research prototype for screening and academic evaluation based on non-destructive surface hardness and ultrasonic wave velocity. Not intended for structural safety decisions. For standard compliance, periodic destructive core testing should be conducted as per applicable standards.</font>",
         body_style
     )
     story.append(disclaimer)

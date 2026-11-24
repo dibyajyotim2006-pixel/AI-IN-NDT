@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from utils.storage import get_all_assessments
 from model.predictor import get_model_bundle
+from paths import get_dataset_path
 
 def render_dashboard(navigate_to=None):
     st.markdown("""
@@ -20,7 +21,7 @@ def render_dashboard(navigate_to=None):
 
     # Load experimental dataset
     try:
-        df_samples = pd.read_csv("data/concrete_samples.csv")
+        df_samples = pd.read_csv(get_dataset_path())
     except Exception:
         df_samples = pd.DataFrame()
 

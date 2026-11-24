@@ -1,16 +1,49 @@
 import os
 import sqlite3
 import datetime
+import shutil
 import pandas as pd
+from paths import get_db_path, get_csv_backup_path, resource_path
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "assessment_history.db")
-CSV_BACKUP_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "assessment_history.csv")
+# SQLite configuration:
+# Rollback journal mode (DELETE) with a 30-second busy timeout is deliberately chosen over WAL mode.
+# Rationale: On Windows desktop installations, WAL mode creates memory-mapped `-shm` and `-wal` files
+# that often cause file-locking issues, process crash recovery failures, and antivirus inspection locks.
+# Rollback journal guarantees clean, single-file ACID transactions without dangling lock files.
+BUSY_TIMEOUT_SECONDS = 30.0
 
 def get_connection():
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    return conn
+    db_file = get_db_path()
+    os.makedirs(os.path.dirname(db_file), exist_ok=True)
+    
+    try:
+        conn = sqlite3.connect(db_file, timeout=BUSY_TIMEOUT_SECONDS, check_same_thread=False)
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=DELETE;")
+        conn.execute("PRAGMA synchronous=NORMAL;")
+        return conn
+    except (sqlite3.DatabaseError, sqlite3.OperationalError) as e:
+        # Graceful handling of corrupt or locked database
+        if "corrupt" in str(e).lower() or "malformed" in str(e).lower():
+            recover_corrupt_database(db_file)
+            conn = sqlite3.connect(db_file, timeout=BUSY_TIMEOUT_SECONDS, check_same_thread=False)
+            conn.row_factory = sqlite3.Row
+            return conn
+        raise
+
+def recover_corrupt_database(db_file: str):
+    """
+    Safely preserves corrupt DB by renaming with timestamp before initializing a fresh DB.
+    Never deletes user data.
+    """
+    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    corrupt_backup = f"{db_file}.corrupt-{ts}"
+    try:
+        if os.path.exists(db_file):
+            shutil.move(db_file, corrupt_backup)
+            print(f"[RECOVERY] Corrupt database preserved at: {corrupt_backup}")
+    except Exception as err:
+        print(f"[RECOVERY ERROR] Could not rename corrupt DB: {err}")
 
 def init_db():
     conn = get_connection()
@@ -88,14 +121,16 @@ def save_assessment(sample_id, age, rebound_index, upv, predicted_strength, asse
     conn.commit()
     conn.close()
     
-    # Also sync to CSV backup
+    # Sync backup copy to user data dir
     sync_csv_backup()
 
 def get_all_assessments():
     init_db()
     conn = get_connection()
-    df = pd.read_sql_query("SELECT * FROM assessment_history ORDER BY id DESC", conn)
-    conn.close()
+    try:
+        df = pd.read_sql_query("SELECT * FROM assessment_history ORDER BY id DESC", conn)
+    finally:
+        conn.close()
     return df
 
 def delete_assessment(assessment_id):
@@ -112,6 +147,8 @@ def sync_csv_backup():
         conn = get_connection()
         df = pd.read_sql_query("SELECT * FROM assessment_history ORDER BY id DESC", conn)
         conn.close()
-        df.to_csv(CSV_BACKUP_PATH, index=False)
+        csv_file = get_csv_backup_path()
+        os.makedirs(os.path.dirname(csv_file), exist_ok=True)
+        df.to_csv(csv_file, index=False)
     except Exception as e:
-        print("CSV backup sync warning:", e)
+        print("[STORAGE WARNING] CSV backup sync error:", e)
