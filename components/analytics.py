@@ -255,7 +255,9 @@ def render_analytics():
             marker=dict(
                 size=9,
                 color=df['Actual_Strength'],
-                colorscale='Cyan',
+                colorscale='Teal',
+                showscale=True,
+                colorbar=dict(title=dict(text="Strength (MPa)", font=dict(color="#94A3B8"))),
                 opacity=0.85,
                 line=dict(width=1, color='#FFFFFF')
             ),
